@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programaton - PL1 & PL2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h2>GESTIÓN DE ROLES</h2>
+            <button class="btn-clear" onclick="clearRol()">LIMPIAR TODO</button>
+        </header>
+
+        <section class="linea-container">
+            <h3 class="label-linea">LÍNEA: PL1</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>OPERACIÓN</th>
+                            <th>8:30pm-11:00</th>
+                            <th>11:05pm-1:30</th>
+                            <th>2:05am-4:35</th>
+                            <th>4:45am-7:00</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-PL1"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="linea-container">
+            <h3 class="label-linea">LÍNEA: PL2</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>OPERACIÓN</th>
+                            <th>8:30pm-11:00</th>
+                            <th>11:05pm-1:30</th>
+                            <th>2:05am-4:35</th>
+                            <th>4:45am-7:00</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-PL2"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="linea-container">
+            <h3 class="label-linea" style="background: #f1c40f; color: #000;">VACACIONES</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody id="cuerpo-VACACIONES"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="linea-container">
+            <h3 class="label-linea" style="background: #e74c3c;">FALTAS INJUSTIFICADAS</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody id="cuerpo-FALTAS"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="linea-container">
+            <h3 class="label-linea" style="background: #95a5a6;">INCAPACIDADES</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tbody id="cuerpo-INCAPACIDADES"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="selection-panel">
+            <div id="status-info">SELECCIONA UNA CELDA PARA ASIGNAR</div>
+            <div id="panel-nombres" class="grid-nombres"></div>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
