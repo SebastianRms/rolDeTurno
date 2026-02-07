@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.3">
     <title>Programaton - PL1 & PL2</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,7 +12,10 @@
     <div class="app-container">
         <header>
             <h2>GESTIÓN DE ROLES</h2>
-            <button class="btn-clear" onclick="clearRol()">LIMPIAR TODO</button>
+            <div class="header-btns">
+                <button id="btnCaptura" class="btn-snapshot" onclick="alternarCaptura()">MODO CAPTURA</button>
+                <button class="btn-clear" onclick="clearRol()">LIMPIAR</button>
+            </div>
         </header>
 
         <section class="linea-container">

@@ -146,4 +146,10 @@ function clearRol() {
     }
 }
 
+function alternarCaptura() {
+    document.body.classList.toggle('modo-captura');
+    const btn = document.getElementById('btnCaptura');
+    btn.innerText = document.body.classList.contains('modo-captura') ? "Volver a Normal" : "Modo Captura";
+}
+
 window.onload = renderizarTabla;
