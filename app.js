@@ -36,7 +36,6 @@ function seleccionarCelda(linea, bloque, operacion) {
     bloqueSeleccionado = bloque;
     operacionSeleccionada = operacion;
 
-    // Si la celda ya tiene alguien, preguntar para borrar
     const actual = rolDelDia[linea][bloque][operacion];
     if (actual) {
         if (confirm(`¿Quitar a ${actual} de esta posición?`)) {
@@ -49,10 +48,20 @@ function seleccionarCelda(linea, bloque, operacion) {
     renderizarBotonesColaboradores();
 }
 
+// Función para validar ocupación global (Reutilizable)
+function validarDisponibilidad(nombre) {
+    let ocupadoEn = null;
+    [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
+        if (Object.values(rolDelDia[cat][bloqueSeleccionado]).includes(nombre)) {
+            ocupadoEn = cat;
+        }
+    });
+    return ocupadoEn;
+}
+
 function asignarNombre(nombre) {
     const empleado = colaboradores.find(c => c.nombre === nombre);
 
-    // 1. Validación de Capacitación (Solo aplica si la celda es de producción PL1 o PL2)
     if (lineaSeleccionada.startsWith("PL")) {
         if (!empleado.habilidades.includes(operacionSeleccionada)) {
             alert(`❌ ${nombre} no tiene capacitación para ${operacionSeleccionada}`);
@@ -60,14 +69,7 @@ function asignarNombre(nombre) {
         }
     }
 
-    // 2. Validación de Unicidad Global (¿Está en CUALQUIER otra tabla en este bloque?)
-    let ocupadoEn = null;
-    [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
-        if (Object.values(rolDelDia[cat][bloqueSeleccionado]).includes(nombre)) {
-            ocupadoEn = cat;
-        }
-    });
-
+    let ocupadoEn = validarDisponibilidad(nombre);
     if (ocupadoEn) {
         alert(`⚠️ ${nombre} ya está ocupado en ${ocupadoEn} en este horario.`);
         return;
@@ -79,15 +81,33 @@ function asignarNombre(nombre) {
     renderizarBotonesColaboradores();
 }
 
+// MEJORA: Función para asignar personal ajeno manualmente
+function asignarManual() {
+    const nombre = document.getElementById('nombreManual').value.trim().toUpperCase();
+    if (!nombre) { alert("Escribe un nombre primero"); return; }
+    if (!lineaSeleccionada) { alert("Selecciona una celda primero"); return; }
+
+    let ocupadoEn = validarDisponibilidad(nombre);
+    if (ocupadoEn) {
+        alert(`⚠️ ${nombre} ya está asignado en ${ocupadoEn}. No se puede duplicar.`);
+        return;
+    }
+
+    rolDelDia[lineaSeleccionada][bloqueSeleccionado][operacionSeleccionada] = nombre;
+    localStorage.setItem('rolOperativo', JSON.stringify(rolDelDia));
+    document.getElementById('nombreManual').value = ""; // Limpiar campo
+    renderizarTabla();
+    renderizarBotonesColaboradores();
+}
+
 function renderizarTabla() {
-    // Renderizar Líneas de Producción
     const opsProduccion = ["ENGINE", "FR END", "RR END", "DOOR LH", "DOOR RH"];
     ["PL1", "PL2"].forEach(linea => {
         dibujarFilas(linea, opsProduccion);
     });
 
-    // Renderizar Tablas de Estado (2 filas cada una)
-    const filasEstado = ["LINEA 1", "LINEA 2"];
+    // MEJORA: Ahora 3 filas para estados
+    const filasEstado = ["LINEA 1", "LINEA 2", "LINEA 3"];
     CATEGORIAS_EXTRA.forEach(cat => {
         dibujarFilas(cat, filasEstado);
     });
@@ -102,7 +122,6 @@ function dibujarFilas(idTabla, listaFilas) {
         html += `<tr><td class="op-cell">${fila}</td>`;
         HORARIOS.forEach(bloque => {
             const asignado = rolDelDia[idTabla][bloque][fila] || "";
-            // Warning si repite en la misma tabla/línea
             const esRepetido = asignado && HORARIOS.some(b => b !== bloque && rolDelDia[idTabla][b][fila] === asignado);
             const estaSel = lineaSeleccionada === idTabla && bloqueSeleccionado === bloque && operacionSeleccionada === fila;
             
@@ -122,7 +141,6 @@ function renderizarBotonesColaboradores() {
     
     let html = `<h3>${lineaSeleccionada} - ${operacionSeleccionada}</h3><div class="grid-nombres">`;
     colaboradores.forEach(c => {
-        // Verificar ocupación global para deshabilitar botones
         let ocupadoGlobal = false;
         [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
             if (Object.values(rolDelDia[cat][bloqueSeleccionado]).includes(c.nombre)) {
@@ -150,6 +168,17 @@ function alternarCaptura() {
     document.body.classList.toggle('modo-captura');
     const btn = document.getElementById('btnCaptura');
     btn.innerText = document.body.classList.contains('modo-captura') ? "Volver a Normal" : "Modo Captura";
+    
+    if (document.body.classList.contains('modo-captura')) {
+        // Salir del modo al tocar cualquier lado para comodidad del líder
+        window.onclick = function(e) {
+            if(e.target.id !== 'btnCaptura') {
+                document.body.classList.remove('modo-captura');
+                btn.innerText = "Modo Captura";
+                window.onclick = null;
+            }
+        };
+    }
 }
 
 window.onload = renderizarTabla;
