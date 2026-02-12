@@ -44,6 +44,22 @@ function resaltarCompatibles(nombre) {
     });
 }
 
+function alternarCaptura() {
+    // 1. Cambiamos la clase en el body
+    document.body.classList.toggle('modo-captura');
+    
+    const btn = document.getElementById('btnCaptura');
+    const estaEnCaptura = document.body.classList.contains('modo-captura');
+    
+    // 2. Actualizamos el texto del botón
+    btn.innerText = estaEnCaptura ? "Volver a Normal" : "Modo Captura";
+    
+    // 3. Si entramos en modo captura, cerramos el panel de nombres por si estaba abierto
+    if (estaEnCaptura) {
+        cerrarPanel();
+    }
+}
+
 function resaltarColaboradoresHabilitados(operacion) {
     limpiarResaltados();
     const botones = document.querySelectorAll('.btn-nombre');
