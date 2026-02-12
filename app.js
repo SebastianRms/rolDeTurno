@@ -7,7 +7,7 @@ const colaboradores = [
     { nombre: "BALTAZAR", habilidades: ["ENGINE"] },
     { nombre: "KAREN PADILLA", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "GIOVANNI LOPEZ", habilidades: ["ENGINE", "RR END", "DOOR LH", "DOOR RH"] },
-    { nombre: "EMANUEL", habilidades: ["ENGINE", "RR END"] },
+    { nombre: "EMANUEL", habilidades: ["ENGINE", "RR END", "DOOR RH"] },
     { nombre: "SANDRA LARA", habilidades: ["FR END", "RR END", "DOOR LH", "DOOR RH"] },
     { nombre: "QUETZALY", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "KAREN HDZ", habilidades: ["ENGINE", "FR END", "DOOR LH", "DOOR RH"] },
@@ -20,16 +20,48 @@ const colaboradores = [
 const HORARIOS = ["8:30pm - 11:00", "11:05pm - 1:30", "2:05am - 4:35", "4:45am - 7:00"];
 const CATEGORIAS_EXTRA = ["VACACIONES", "FALTAS", "INCAPACIDADES"];
 
-// Estructura inicial extendida
 let rolDelDia = JSON.parse(localStorage.getItem('rolOperativo')) || {
     "PL1": {}, "PL2": {}, "VACACIONES": {}, "FALTAS": {}, "INCAPACIDADES": {}
 };
 
-// Asegurar que todas las categorías y horarios existan al cargar
+// Inicialización de estructura
 [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
     if (!rolDelDia[cat]) rolDelDia[cat] = {};
     HORARIOS.forEach(h => { if (!rolDelDia[cat][h]) rolDelDia[cat][h] = {}; });
 });
+
+// --- FUNCIONES DE RESALTADO (LÓGICA MEJORADA) ---
+
+function resaltarCompatibles(nombre) {
+    limpiarResaltados();
+    const empleado = colaboradores.find(c => c.nombre === nombre);
+    if (!empleado) return;
+
+    document.querySelectorAll('.op-cell').forEach(celda => {
+        if (empleado.habilidades.includes(celda.innerText.trim())) {
+            celda.classList.add('highlight-op');
+        }
+    });
+}
+
+function resaltarColaboradoresHabilitados(operacion) {
+    limpiarResaltados();
+    const botones = document.querySelectorAll('.btn-nombre');
+    botones.forEach(btn => {
+        const nombreLimpio = btn.innerText.split('(')[0].trim();
+        const empleado = colaboradores.find(c => c.nombre === nombreLimpio);
+        if (empleado && empleado.habilidades.includes(operacion)) {
+            btn.classList.add('btn-highlight');
+        }
+    });
+}
+
+function limpiarResaltados() {
+    document.querySelectorAll('.op-cell').forEach(c => c.classList.remove('highlight-op'));
+    document.querySelectorAll('.btn-nombre').forEach(b => b.classList.remove('btn-highlight'));
+}
+
+// --- LÓGICA DE CONTROL ---
 
 function seleccionarCelda(linea, bloque, operacion) {
     lineaSeleccionada = linea;
@@ -46,17 +78,18 @@ function seleccionarCelda(linea, bloque, operacion) {
     
     renderizarTabla();
     renderizarBotonesColaboradores();
+    
+    // Al seleccionar, resaltamos automáticamente quiénes pueden entrar ahí
+    resaltarColaboradoresHabilitados(operacion);
 }
 
-// Función para validar ocupación global (Reutilizable)
-function validarDisponibilidad(nombre) {
-    let ocupadoEn = null;
-    [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
-        if (Object.values(rolDelDia[cat][bloqueSeleccionado]).includes(nombre)) {
-            ocupadoEn = cat;
-        }
-    });
-    return ocupadoEn;
+function cerrarPanel() {
+    lineaSeleccionada = null;
+    bloqueSeleccionado = null;
+    operacionSeleccionada = null;
+    limpiarResaltados();
+    document.getElementById('panel-nombres').classList.add('hidden');
+    renderizarTabla();
 }
 
 function asignarNombre(nombre) {
@@ -71,7 +104,7 @@ function asignarNombre(nombre) {
 
     let ocupadoEn = validarDisponibilidad(nombre);
     if (ocupadoEn) {
-        alert(`⚠️ ${nombre} ya está ocupado en ${ocupadoEn} en este horario.`);
+        alert(`⚠️ ${nombre} ya está ocupado en ${ocupadoEn}.`);
         return;
     }
 
@@ -79,38 +112,28 @@ function asignarNombre(nombre) {
     localStorage.setItem('rolOperativo', JSON.stringify(rolDelDia));
     renderizarTabla();
     renderizarBotonesColaboradores();
+    // Mantener resaltado tras asignar
+    resaltarColaboradoresHabilitados(operacionSeleccionada);
 }
 
-// MEJORA: Función para asignar personal ajeno manualmente
-function asignarManual() {
-    const nombre = document.getElementById('nombreManual').value.trim().toUpperCase();
-    if (!nombre) { alert("Escribe un nombre primero"); return; }
-    if (!lineaSeleccionada) { alert("Selecciona una celda primero"); return; }
-
-    let ocupadoEn = validarDisponibilidad(nombre);
-    if (ocupadoEn) {
-        alert(`⚠️ ${nombre} ya está asignado en ${ocupadoEn}. No se puede duplicar.`);
-        return;
-    }
-
-    rolDelDia[lineaSeleccionada][bloqueSeleccionado][operacionSeleccionada] = nombre;
-    localStorage.setItem('rolOperativo', JSON.stringify(rolDelDia));
-    document.getElementById('nombreManual').value = ""; // Limpiar campo
-    renderizarTabla();
-    renderizarBotonesColaboradores();
+function validarDisponibilidad(nombre) {
+    let ocupadoEn = null;
+    [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
+        if (Object.values(rolDelDia[cat][bloqueSeleccionado]).includes(nombre)) {
+            ocupadoEn = cat;
+        }
+    });
+    return ocupadoEn;
 }
+
+// --- RENDERIZADO ---
 
 function renderizarTabla() {
     const opsProduccion = ["ENGINE", "FR END", "RR END", "DOOR LH", "DOOR RH"];
-    ["PL1", "PL2"].forEach(linea => {
-        dibujarFilas(linea, opsProduccion);
-    });
+    ["PL1", "PL2"].forEach(linea => dibujarFilas(linea, opsProduccion));
 
-    // MEJORA: Ahora 3 filas para estados
     const filasEstado = ["LINEA 1", "LINEA 2", "LINEA 3"];
-    CATEGORIAS_EXTRA.forEach(cat => {
-        dibujarFilas(cat, filasEstado);
-    });
+    CATEGORIAS_EXTRA.forEach(cat => dibujarFilas(cat, filasEstado));
 }
 
 function dibujarFilas(idTabla, listaFilas) {
@@ -119,14 +142,19 @@ function dibujarFilas(idTabla, listaFilas) {
     
     let html = "";
     listaFilas.forEach(fila => {
-        html += `<tr><td class="op-cell">${fila}</td>`;
+        html += `<tr>
+            <td class="op-cell" 
+                onmouseover="resaltarColaboradoresHabilitados('${fila}')" 
+                onmouseout="if(!operacionSeleccionada) limpiarResaltados()">
+                ${fila}
+            </td>`;
+        
         HORARIOS.forEach(bloque => {
             const asignado = rolDelDia[idTabla][bloque][fila] || "";
-            const esRepetido = asignado && HORARIOS.some(b => b !== bloque && rolDelDia[idTabla][b][fila] === asignado);
             const estaSel = lineaSeleccionada === idTabla && bloqueSeleccionado === bloque && operacionSeleccionada === fila;
             
             html += `<td onclick="seleccionarCelda('${idTabla}', '${bloque}', '${fila}')" 
-                        class="${esRepetido ? 'warning' : ''} ${estaSel ? 'selected' : ''}">
+                        class="${estaSel ? 'selected' : ''}">
                         ${asignado}
                      </td>`;
         });
@@ -137,9 +165,18 @@ function dibujarFilas(idTabla, listaFilas) {
 
 function renderizarBotonesColaboradores() {
     const contenedor = document.getElementById('panel-nombres');
-    if (!bloqueSeleccionado) return;
+    if (!bloqueSeleccionado) {
+        contenedor.classList.add('hidden');
+        return;
+    }
     
-    let html = `<h3>${lineaSeleccionada} - ${operacionSeleccionada}</h3><div class="grid-nombres">`;
+    contenedor.classList.remove('hidden');
+    
+    let html = `
+        <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
+        <h3>Asignar a: ${operacionSeleccionada} (${bloqueSeleccionado})</h3>
+        <div class="grid-nombres">`;
+
     colaboradores.forEach(c => {
         let ocupadoGlobal = false;
         [...["PL1", "PL2"], ...CATEGORIAS_EXTRA].forEach(cat => {
@@ -148,36 +185,22 @@ function renderizarBotonesColaboradores() {
             }
         });
 
-        html += `<button onclick="asignarNombre('${c.nombre}')" 
-                 ${ocupadoGlobal ? 'disabled' : ''} 
-                 class="btn-nombre">
-                 ${c.nombre} ${ocupadoGlobal ? '(Ocupado)' : ''}
+        html += `<button 
+                    onclick="asignarNombre('${c.nombre}')" 
+                    onmouseover="resaltarCompatibles('${c.nombre}')"
+                    onmouseout="resaltarColaboradoresHabilitados(operacionSeleccionada)"
+                    ${ocupadoGlobal ? 'disabled' : ''} 
+                    class="btn-nombre">
+                    ${c.nombre} ${ocupadoGlobal ? '(Ocupado)' : ''}
                  </button>`;
     });
     contenedor.innerHTML = html + "</div>";
 }
 
 function clearRol() {
-    if (confirm("¿Vaciar todo el rol y estados de personal?")) {
+    if (confirm("¿Vaciar todo el rol?")) {
         localStorage.removeItem('rolOperativo');
         location.reload();
-    }
-}
-
-function alternarCaptura() {
-    document.body.classList.toggle('modo-captura');
-    const btn = document.getElementById('btnCaptura');
-    btn.innerText = document.body.classList.contains('modo-captura') ? "Volver a Normal" : "Modo Captura";
-    
-    if (document.body.classList.contains('modo-captura')) {
-        // Salir del modo al tocar cualquier lado para comodidad del líder
-        window.onclick = function(e) {
-            if(e.target.id !== 'btnCaptura') {
-                document.body.classList.remove('modo-captura');
-                btn.innerText = "Modo Captura";
-                window.onclick = null;
-            }
-        };
     }
 }
 

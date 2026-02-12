@@ -53,3 +53,37 @@ td.warning { background: #ffeb3b !important; color: #000; border: 2px solid #f44
     font-size: 0.6rem !important;
 }
 
+/* Resaltado de alto contraste para Operaciones */
+.highlight-op {
+    background-color: #0056b3 !important; /* Azul fuerte */
+    color: white !important;
+    font-weight: bold;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+}
+
+/* Resaltado de alto contraste para Botones de Colaboradores */
+.btn-highlight {
+    background-color: #2e7d32 !important; /* Verde fuerte */
+    color: white !important;
+    transform: scale(1.05);
+    border: 2px solid #1b5e20 !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+/* Panel oculto */
+.hidden {
+    display: none;
+}
+
+/* Botón cerrar */
+.btn-cerrar {
+    float: right;
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+}
