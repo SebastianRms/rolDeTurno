@@ -5,6 +5,7 @@ let operacionSeleccionada = null;
 
 const colaboradores = [
     { nombre: "BALTAZAR", habilidades: ["ENGINE"] },
+    { nombre: "SANTOS", habilidades: ["ENGINE"] },
     { nombre: "KAREN PADILLA", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "GIOVANNI LOPEZ", habilidades: ["ENGINE", "RR END", "DOOR LH", "DOOR RH"] },
     { nombre: "EMANUEL", habilidades: ["ENGINE", "RR END", "DOOR RH"] },
@@ -75,6 +76,23 @@ function resaltarColaboradoresHabilitados(operacion) {
 function limpiarResaltados() {
     document.querySelectorAll('.op-cell').forEach(c => c.classList.remove('highlight-op'));
     document.querySelectorAll('.btn-nombre').forEach(b => b.classList.remove('btn-highlight'));
+}
+
+function asignarManual() {
+    const input = document.getElementById('nombreManual');
+    const nombre = input.value.trim().toUpperCase();
+
+    if (!lineaSeleccionada) {
+        alert("⚠️ Selecciona primero una celda en la tabla.");
+        return;
+    }
+    if (!nombre) {
+        alert("⚠️ Escribe un nombre antes de asignar.");
+        return;
+    }
+
+    asignarNombre(nombre);
+    input.value = ""; // Limpiar el cuadro de texto
 }
 
 // --- LÓGICA DE CONTROL ---
