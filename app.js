@@ -45,6 +45,28 @@ function resaltarCompatibles(nombre) {
     });
 }
 
+function asignarManual() {
+    const input = document.getElementById('nombreManual');
+    const nombre = input.value.trim().toUpperCase();
+    
+    // Si no hay celda seleccionada o el nombre está vacío, no hace nada
+    if (!lineaSeleccionada || !nombre) {
+        alert("Selecciona una celda y escribe un nombre");
+        return;
+    }
+
+    // Ponemos el nombre directo en el objeto, sin validar habilidades
+    rolDelDia[lineaSeleccionada][bloqueSeleccionado][operacionSeleccionada] = nombre;
+    
+    // Guardamos en el local storage
+    localStorage.setItem('rolOperativo', JSON.stringify(rolDelDia));
+    
+    // Limpiamos y refrescamos
+    input.value = "";
+    renderizarTabla();
+    renderizarBotonesColaboradores();
+}
+
 function alternarCaptura() {
     // 1. Cambiamos la clase en el body
     document.body.classList.toggle('modo-captura');
@@ -129,7 +151,8 @@ function cerrarPanel() {
 function asignarNombre(nombre) {
     const empleado = colaboradores.find(c => c.nombre === nombre);
 
-    if (lineaSeleccionada.startsWith("PL")) {
+    // Solo validamos habilidades si el empleado existe en la lista fija
+    if (empleado && lineaSeleccionada.startsWith("PL")) {
         if (!empleado.habilidades.includes(operacionSeleccionada)) {
             alert(`❌ ${nombre} no tiene capacitación para ${operacionSeleccionada}`);
             return;
@@ -146,8 +169,6 @@ function asignarNombre(nombre) {
     localStorage.setItem('rolOperativo', JSON.stringify(rolDelDia));
     renderizarTabla();
     renderizarBotonesColaboradores();
-    // Mantener resaltado tras asignar
-    resaltarColaboradoresHabilitados(operacionSeleccionada);
 }
 
 function validarDisponibilidad(nombre) {
