@@ -1,73 +1,186 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Arial', sans-serif; background: #f0f0f0; color: #000; padding: 10px; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-.app-container { max-width: 700px; margin: auto; }
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f0f0f0;
+    color: #000;
+    padding: 10px;
+}
 
-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 3px solid #000; margin-bottom: 10px; background: white; }
+.app-container {
+    max-width: 700px;
+    margin: auto;
+}
 
-.label-linea { background: #000; color: #fff; padding: 5px 15px; font-size: 0.9rem; display: inline-block; }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 3px solid #000;
+    margin-bottom: 10px;
+    background: white;
+}
 
-.table-wrapper { overflow-x: auto; margin-bottom: 20px; border: 2px solid #000; background: white; }
+.label-linea {
+    background: #000;
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
 
-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border: 2px solid #000;
+    background: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
 
 /* Estilo solicitado: Encabezados y Operaciones en Azul */
-th { background: #003366; color: white; border: 1px solid #000; padding: 10px; font-size: 0.7rem; }
-.op-cell { background: #003366; color: white; font-weight: bold; border: 1px solid #000; width: 100px; }
+th {
+    background: #003366;
+    color: white;
+    border: 1px solid #000;
+    padding: 10px;
+    font-size: 0.7rem;
+}
+
+.op-cell {
+    background: #003366;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #000;
+    width: 100px;
+}
 
 /* Celdas de nombres: Blanco con letras negras */
-td { border: 1px solid #000; padding: 15px 5px; text-align: center; font-size: 0.8rem; background: #ffffff; color: #000; font-weight: bold; height: 50px; }
+td {
+    border: 1px solid #000;
+    padding: 15px 5px;
+    text-align: center;
+    font-size: 0.8rem;
+    background: #ffffff;
+    color: #000;
+    font-weight: bold;
+    height: 50px;
+}
 
 /* Estados */
-td.selected { background: #3399ff !important; color: white; }
-td.warning { background: #ffeb3b !important; color: #000; border: 2px solid #f44336; }
+td.selected {
+    background: #3399ff !important;
+    color: white;
+}
 
-#selection-panel { background: #fff; padding: 15px; border: 3px solid #000; position: sticky; bottom: 5px; }
-.grid-nombres { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+td.warning {
+    background: #ffeb3b !important;
+    color: #000;
+    border: 2px solid #f44336;
+}
 
-.btn-nombre { padding: 12px; border: 2px solid #000; background: #eee; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-.btn-nombre:disabled { background: #ccc; color: #777; }
-.btn-nombre:active { background: #003366; color: white; }
+#selection-panel {
+    background: #fff;
+    padding: 5px;
+    border: 3px solid #000;
+    position: sticky;
+    bottom: 5px;
+}
 
-.btn-clear { background: #d32f2f; color: #fff; border: 2px solid #000; padding: 8px 15px; font-weight: bold; cursor: pointer; }
-#status-info { font-weight: bold; text-align: center; color: #003366; }
+.grid-nombres {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Esto fuerza exactamente 3 columnas */
+    gap: 4px; /* Espacio mínimo entre botones */
+    padding: 8px;
+}
 
-.op-cell { 
-    background: #003366 !important; 
-    color: white !important; 
-    font-weight: bold; 
+.btn-nombre {
+    font-size: 10px;         /* Letra bien pequeña para que no se amontone */
+    padding: 10px 7px;       /* Espacio interno reducido */
+    text-align: center;
+    white-space: nowrap;    /* Evita que el nombre se parta en dos renglones */
+    text-overflow: ellipsis; 
+    font-weight: bold;
+    border: 1px solid #ccc;
+    background: #fdfdfd;
+}
+
+.btn-nombre:disabled {
+    background: #eeeeee;
+    color: #999;
+    border: 1px dashed #ccc;
+}
+
+.btn-nombre:active {
+    background: #003366;
+    color: white;
+}
+
+.btn-clear {
+    background: #d32f2f;
+    color: #fff;
+    border: 2px solid #000;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#status-info {
+    font-weight: bold;
+    text-align: center;
+    color: #003366;
+}
+
+.op-cell {
+    background: #003366 !important;
+    color: white !important;
+    font-weight: bold;
     text-transform: uppercase;
     font-size: 0.65rem;
 }
 
 /* Este código reduce el tamaño de todo solo cuando sea necesario */
 .modo-captura {
-    transform: scale(0.6); /* Reduce todo al 60% */
+    transform: scale(0.6);
+    /* Reduce todo al 60% */
     transform-origin: top center;
-    width: 160% !important; /* Compensa el espacio para que no se vea cortado */
+    width: 160% !important;
+    /* Compensa el espacio para que no se vea cortado */
 }
 
 /* Ajuste de fuentes para que no se pierda legibilidad */
-.modo-captura td, .modo-captura th {
+.modo-captura td,
+.modo-captura th {
     padding: 4px 2px !important;
     font-size: 0.6rem !important;
 }
 
 /* Resaltado de alto contraste para Operaciones */
 .highlight-op {
-    background-color: #0056b3 !important; /* Azul fuerte */
+    background-color: #0056b3 !important;
+    /* Azul fuerte */
     color: white !important;
     font-weight: bold;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Resaltado de alto contraste para Botones de Colaboradores */
 .btn-highlight {
-    background-color: #2e7d32 !important; /* Verde fuerte */
+    background-color: #2e7d32 !important;
+    /* Verde fuerte */
     color: white !important;
     transform: scale(1.05);
     border: 2px solid #1b5e20 !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
 
@@ -86,4 +199,17 @@ td.warning { background: #ffeb3b !important; color: #000; border: 2px solid #f44
     cursor: pointer;
     font-weight: bold;
     border-radius: 4px;
+}
+
+
+.btn-cerrar-manual {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 2px 8px;
+    font-size: 10px;
+    background: #c62828;
+    color: white;
+    border: none;
+    cursor: pointer;
 }

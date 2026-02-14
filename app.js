@@ -227,9 +227,9 @@ function renderizarBotonesColaboradores() {
     
     contenedor.classList.remove('hidden');
     
+    // Solo generamos el título y el grid de nombres
     let html = `
-        <button class="btn-cerrar" onclick="cerrarPanel()">Cerrar</button>
-        <h3>Asignar a: ${operacionSeleccionada} (${bloqueSeleccionado})</h3>
+        <h3>Asignar a: ${operacionSeleccionada}</h3>
         <div class="grid-nombres">`;
 
     colaboradores.forEach(c => {
@@ -246,9 +246,10 @@ function renderizarBotonesColaboradores() {
                     onmouseout="resaltarColaboradoresHabilitados(operacionSeleccionada)"
                     ${ocupadoGlobal ? 'disabled' : ''} 
                     class="btn-nombre">
-                    ${c.nombre} ${ocupadoGlobal ? '(Ocupado)' : ''}
+                    ${c.nombre}
                  </button>`;
     });
+    
     contenedor.innerHTML = html + "</div>";
 }
 
