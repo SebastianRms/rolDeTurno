@@ -4,7 +4,7 @@ let bloqueSeleccionado = null;
 let operacionSeleccionada = null;
 
 const colaboradores = [
-    { nombre: "BALTAZAR", habilidades: ["ENGINE"] },
+    { nombre: "BALTAZAR", habilidades: ["ENGINE", "DOOR LH", "DOOR RH"] },
     { nombre: "SANTOS", habilidades: ["ENGINE"] },
     { nombre: "KAREN PADILLA", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "GIOVANNI LOPEZ", habilidades: ["ENGINE", "RR END", "DOOR LH", "DOOR RH"] },
