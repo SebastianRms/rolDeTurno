@@ -16,6 +16,7 @@ const colaboradores = [
     { nombre: "DANIEL", habilidades: ["RR END", "DOOR LH", "DOOR RH"] },
     { nombre: "PAULA", habilidades: ["FR END"] },
     { nombre: "JESUS", habilidades: ["RR END"] },
+    { nombre: "JAZMIN", habilidades: ["DOOR LH", "DOOR RH", "FR END", "RR END"] },
 ];
 
 const HORARIOS = ["8:30pm - 11:00", "11:05pm - 1:30", "2:05am - 4:35", "4:45am - 7:00"];
