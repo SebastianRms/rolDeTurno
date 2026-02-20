@@ -8,18 +8,18 @@ const colaboradores = [
     { nombre: "SANTOS", habilidades: ["ENGINE"] },
     { nombre: "KAREN PADILLA", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "GIOVANNI LOPEZ", habilidades: ["ENGINE", "RR END", "DOOR LH", "DOOR RH"] },
-    { nombre: "EMANUEL", habilidades: ["ENGINE", "RR END", "DOOR RH"] },
+    { nombre: "EMANUEL", habilidades: ["ENGINE", "RR END", "DOOR RH", "DOOR LH"] },
     { nombre: "SANDRA LARA", habilidades: ["FR END", "RR END", "DOOR LH", "DOOR RH"] },
     { nombre: "QUETZALY", habilidades: ["FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "KAREN HDZ", habilidades: ["ENGINE", "FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "CRISTINA", habilidades: ["ENGINE", "FR END", "DOOR LH", "DOOR RH"] },
     { nombre: "DANIEL", habilidades: ["RR END", "DOOR LH", "DOOR RH"] },
     { nombre: "PAULA", habilidades: ["FR END"] },
-    { nombre: "JESUS", habilidades: ["RR END"] },
+    { nombre: "JESUS", habilidades: ["RR END", "DOOR RH", "DOOR LH"] },
     { nombre: "JAZMIN", habilidades: ["DOOR LH", "DOOR RH", "FR END", "RR END"] },
 ];
 
-const HORARIOS = ["8:30pm - 11:00", "11:05pm - 1:30", "2:05am - 4:35", "4:45am - 7:00"];
+const HORARIOS = ["7:00am - 9:30", "9:35am - 12:00", "12:32pm - 2:35", "2:40pm - 4:40", "5:00pm - 7:00"];
 const CATEGORIAS_EXTRA = ["VACACIONES", "FALTAS", "INCAPACIDADES"];
 
 let rolDelDia = JSON.parse(localStorage.getItem('rolOperativo')) || {
